@@ -1,0 +1,596 @@
+[
+  {
+    "url": "https://www.xloopdigital.com/xlab/hr-app-pilot",
+    "status": 200,
+    "responseTime": 193,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found",
+      "Missing Alt Text in 4 images"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/xlab/xCrowdIQ",
+    "status": 200,
+    "responseTime": 198,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found",
+      "Missing Alt Text in 1 images"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/xlab/xServe",
+    "status": 200,
+    "responseTime": 296,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found",
+      "Missing Alt Text in 7 images"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/xlab/xVoltIQ",
+    "status": 200,
+    "responseTime": 451,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found",
+      "Missing Alt Text in 1 images"
+    ],
+    "internalLinksCount": 41,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com",
+    "status": 200,
+    "responseTime": 597,
+    "issues": [
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found",
+      "Missing Alt Text in 2 images"
+    ],
+    "internalLinksCount": 46,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/xlab/app-pilot",
+    "status": 200,
+    "responseTime": 808,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/xlab/chat-genie",
+    "status": 200,
+    "responseTime": 829,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/xlab/design-studio",
+    "status": 200,
+    "responseTime": 262,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/xlab/xVision",
+    "status": 200,
+    "responseTime": 452,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/services/ai-security-service",
+    "status": 200,
+    "responseTime": 216,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 41,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/services/cloud-and-hyperscaling",
+    "status": 200,
+    "responseTime": 177,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/services/computer-vision",
+    "status": 200,
+    "responseTime": 282,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 41,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/services/cyber-security-service",
+    "status": 200,
+    "responseTime": 448,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 41,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/services/data-analytics",
+    "status": 200,
+    "responseTime": 129,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/services/digital-twin",
+    "status": 200,
+    "responseTime": 279,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 41,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/services/large-language-models",
+    "status": 200,
+    "responseTime": 361,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 41,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/services/machine-learning",
+    "status": 200,
+    "responseTime": 424,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 41,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/services/nepra",
+    "status": 200,
+    "responseTime": 347,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Missing Alt Text in 17 images"
+    ],
+    "internalLinksCount": 41,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/services/predictive-analytics",
+    "status": 200,
+    "responseTime": 284,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 41,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/services/web-and-app-development",
+    "status": 200,
+    "responseTime": 178,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/industries/banking-and-finance",
+    "status": 200,
+    "responseTime": 367,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/industries/edTech",
+    "status": 200,
+    "responseTime": 226,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/industries/energy-and-utilities",
+    "status": 200,
+    "responseTime": 190,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/industries/healthcare",
+    "status": 200,
+    "responseTime": 169,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/industries/manufacturing",
+    "status": 200,
+    "responseTime": 185,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/industries/retail-and-eCommerce",
+    "status": 200,
+    "responseTime": 191,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/industries/smart-cities",
+    "status": 200,
+    "responseTime": 258,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/industries/telco-itc",
+    "status": 200,
+    "responseTime": 201,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/industries/transports-and-logistics",
+    "status": 200,
+    "responseTime": 219,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/insights/blogs/5-agentic-ai-implementation-examples-in-action",
+    "status": 200,
+    "responseTime": 201,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/insights/blogs/agentic-ai-in-wealth-management-building-self-optimising-investment-portfolios",
+    "status": 200,
+    "responseTime": 149,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/insights/blogs/ai-document-processing-roi-how-mid-market-companies-are-cutting-processing-time-by-60-and-what-it-costs-to-wait",
+    "status": 200,
+    "responseTime": 300,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/insights/blogs/ai-governance-and-cybersecurity-strategies-for-modern-enterprises",
+    "status": 200,
+    "responseTime": 189,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 44,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/insights/blogs/ai-in-banking-5-transformative-trends-reshaping-finance-in-2025",
+    "status": 200,
+    "responseTime": 266,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/insights/blogs/ai-in-banking-where-it-works-what-it-takes-and-why-it-matters",
+    "status": 200,
+    "responseTime": 255,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 46,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/insights/blogs/ai-in-retail-from-personalization-to-inventory-optimization",
+    "status": 200,
+    "responseTime": 145,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/insights/blogs/ai-led-data-migration-reduce-carbon-footprint",
+    "status": 200,
+    "responseTime": 110,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 44,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/insights/blogs/building-scalable-ai-infrastructure-real-world-lessons",
+    "status": 200,
+    "responseTime": 243,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/insights/blogs/business-issues-conversational-ai-can-solve-today",
+    "status": 200,
+    "responseTime": 127,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/insights/blogs/china-ai-hospital-revolution-how-virtual-doctors-are-treating-thousands-of-patients-without-human-intervention",
+    "status": 200,
+    "responseTime": 137,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 46,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/insights/blogs/choosing-between-off-the-shelf-and-custom-ai-solutions",
+    "status": 200,
+    "responseTime": 184,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Meta Description too long (>160 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/services/ai-agents-and-autonomous-systems",
+    "status": 200,
+    "responseTime": 446,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 41,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/services/ai-consulting-and-development",
+    "status": 200,
+    "responseTime": 277,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/services/generative-ai",
+    "status": 200,
+    "responseTime": 386,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 41,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/insights/blogs/3-applications-of-big-data-in-healthcare-real-examples",
+    "status": 200,
+    "responseTime": 287,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 44,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/insights/blogs/4-ways-ai-is-making-inroad-in-the-transportation-industry",
+    "status": 200,
+    "responseTime": 283,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/insights/blogs/5-real-world-use-cases-ai-in-industrial-automation",
+    "status": 200,
+    "responseTime": 150,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/insights/blogs/ai-use-cases-south-african-enterprises",
+    "status": 200,
+    "responseTime": 256,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/insights/blogs/autonomous-quality-inspection-readiness-indicators",
+    "status": 200,
+    "responseTime": 220,
+    "issues": [
+      "Title too long (>60 chars)",
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 45,
+    "brokenLinksOnPage": []
+  },
+  {
+    "url": "https://www.xloopdigital.com/insights/blogs",
+    "status": 200,
+    "responseTime": 218,
+    "issues": [
+      "Multiple H1 Tags found"
+    ],
+    "internalLinksCount": 50,
+    "brokenLinksOnPage": []
+  }
+]

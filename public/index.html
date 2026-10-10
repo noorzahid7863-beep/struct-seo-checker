@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SEO Audit Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f4f7f6; color: #333; }
+        h1 { color: #2c3e50; }
+        .filters { margin-bottom: 20px; display: flex; gap: 10px; }
+        input, select { padding: 8px; font-size: 14px; width: 300px; }
+        table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #2c3e50; color: white; }
+        tr:hover { background-color: #f1f1f1; }
+        .badge { background: #e74c3c; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+    <h1>📊 SEO & Link Health Checker Dashboard</h1>
+    
+    <div class="filters">
+        <input type="text" id="searchInput" placeholder="Search by URL..." onkeyup="filterTable()">
+        <select id="issueFilter" onchange="filterTable()">
+            <option value="">All Issues</option>
+            <option value="Title">Title Issues</option>
+            <option value="Meta">Meta Description Issues</option>
+            <option value="H1">H1 Tag Issues</option>
+            <option value="Alt">Alt Text Issues</option>
+            <option value="Broken">Broken Links</option>
+        </select>
+    </div>
+
+    <table id="seoTable">
+        <thead>
+            <tr>
+                <th>URL</th>
+                <th>Status</th>
+                <th>Response Time</th>
+                <th>Issues Count</th>
+                <th>Issues List</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            <!-- Data will load here -->
+        </tbody>
+    </table>
+
+    <script>
+        let reportData = [];
+
+        async function loadReport() {
+            try {
+                const response = await fetch('../report.json');
+                reportData = await response.json();
+                displayTable(reportData);
+            } catch (err) {
+                try {
+                    const response = await fetch('./report.json');
+                    reportData = await response.json();
+                    displayTable(reportData);
+                } catch (e) {
+                    alert('Could not load report.json! Make sure you ran index.js first.');
+                }
+            }
+        }
+
+        function displayTable(data) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            data.forEach(item => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><a href="${item.url}" target="_blank">${item.url}</a></td>
+                    <td>${item.status}</td>
+                    <td>${item.responseTime} ms</td>
+                    <td><span class="badge">${item.issues.length}</span></td>
+                    <td>${item.issues.join('<br>')}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterTable() {
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const selectedIssue = document.getElementById('issueFilter').value.toLowerCase();
+
+            const filtered = reportData.filter(item => {
+                const matchesSearch = item.url.toLowerCase().includes(searchText);
+                const matchesIssue = selectedIssue === '' || item.issues.some(issue => issue.toLowerCase().includes(selectedIssue));
+                return matchesSearch && matchesIssue;
+            });
+
+            displayTable(filtered);
+        }
+
+        loadReport();
+    </script>
+</body>
+</html>

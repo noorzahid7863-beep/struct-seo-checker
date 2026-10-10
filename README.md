@@ -1,6 +1,6 @@
 # Website SEO & Link Health Checker
 
-A automated Node.js tool and web dashboard designed to audit website pages, check SEO health (Titles, Meta descriptions, H1 tags, image Alt texts), and detect broken links.
+An automated Node.js tool and web dashboard designed to audit website pages, check SEO health (Titles, Meta descriptions, H1 tags, image Alt texts), and detect broken links.
 
 ---
 
@@ -22,5 +22,5 @@ A automated Node.js tool and web dashboard designed to audit website pages, chec
 
 1. **Clone the Repository:**
    ```bash
-   git clone [https://github.com/noorzahid7863/seo-link-checker.git](https://github.com/noorzahid7863/seo-link-checker.git)
+   git clone [https://github.com/noorzahid7863-beep/struct-seo-checker.git](https://github.com/noorzahid7863-beep/struct-seo-checker.git)
    cd seo-checker

@@ -4,7 +4,7 @@ const https = require('https');
 const { URL } = require('url');
 const cheerio = require('cheerio');
 
-// 1. Command line se URL lena (e.g., node index.js https://www.xloopdigital.com)
+// 1. Command line se URL lena
 const targetUrlArg = process.argv[2];
 if (!targetUrlArg) {
   console.error("❌ Error: Please provide a URL!");
@@ -15,13 +15,38 @@ if (!targetUrlArg) {
 const parsedBase = new URL(targetUrlArg);
 const BASE_URL = parsedBase.origin;
 
-// Helper: Fetch function using native http/https to avoid fetch issues
-function fetchPage(url) {
+// Global Link Cache Map (Duplicate requests rokne ke liye)
+const linkCache = new Map();
+
+// Helper: Fetch function with 301/302 Redirect Support & Timeouts
+function fetchPage(url, maxRedirects = 5) {
   return new Promise((resolve, reject) => {
-    const client = url.startsWith('https') ? https : http;
+    if (maxRedirects < 0) {
+      return reject(new Error('Too many redirects'));
+    }
+
+    let client;
+    try {
+      const parsedUrl = new URL(url);
+      client = parsedUrl.protocol === 'https:' ? https : http;
+    } catch (e) {
+      return reject(new Error('Invalid URL'));
+    }
+
     const startTime = Date.now();
     
     const req = client.get(url, { headers: { 'User-Agent': 'SEO-Checker-Bot/1.0' } }, (res) => {
+      // 301/302 Redirect Handling
+      if ([301, 302, 307, 308].includes(res.statusCode) && res.headers.location) {
+        let redirectUrl;
+        try {
+          redirectUrl = new URL(res.headers.location, url).href;
+        } catch (e) {
+          return reject(new Error('Invalid Redirect URL'));
+        }
+        return fetchPage(redirectUrl, maxRedirects - 1).then(resolve).catch(reject);
+      }
+
       let data = '';
       res.on('data', chunk => data += chunk);
       res.on('end', () => {
@@ -29,7 +54,8 @@ function fetchPage(url) {
         resolve({
           status: res.statusCode,
           html: data,
-          responseTime
+          responseTime,
+          finalUrl: url
         });
       });
     });
@@ -43,6 +69,25 @@ function fetchPage(url) {
       reject(new Error('Request Timeout'));
     });
   });
+}
+
+// Cached Link Checker (Fast & No Duplicate Requests)
+async function checkLinkCached(link) {
+  if (linkCache.has(link)) {
+    return linkCache.get(link); // Cache se result return karein
+  }
+
+  const promise = (async () => {
+    try {
+      const res = await fetchPage(link);
+      return { status: res.status, error: null };
+    } catch (err) {
+      return { status: 'Error', error: err.message };
+    }
+  })();
+
+  linkCache.set(link, promise);
+  return promise;
 }
 
 // Simple XML parser for sitemap
@@ -66,13 +111,10 @@ function extractInternalLinks(html, baseUrl) {
     if (href) {
       try {
         let fullUrl = new URL(href, baseUrl).href;
-        // Sirf same domain ke links rakho
         if (fullUrl.startsWith(baseUrl)) {
           links.add(fullUrl.split('#')[0]); // Remove hashes
         }
-      } catch (e) {
-        // Invalid URL ignore karo
-      }
+      } catch (e) {}
     }
   });
   
@@ -117,7 +159,7 @@ async function main() {
     console.log(`⚠️ Sitemap not found or failed. Falling back to homepage crawling...`);
   }
 
-  // Step B: Fallback to homepage crawling if sitemap failed or empty
+  // Step B: Fallback to homepage crawling
   if (urlsToTest.length === 0) {
     try {
       const homeRes = await fetchPage(BASE_URL);
@@ -200,7 +242,7 @@ async function main() {
         pageResult.issues.push(`Missing Alt Text in ${missingAltCount} images`);
       }
 
-      // 5. Internal Links Check (Link Health)
+      // 5. Internal Links Check (Link Health with Cache)
       const internalLinks = [];
       $('a').each((_, el) => {
         let href = $(el).attr('href');
@@ -217,20 +259,13 @@ async function main() {
       const uniqueInternalLinks = Array.from(new Set(internalLinks));
       pageResult.internalLinksCount = uniqueInternalLinks.length;
 
-      // Check broken links (sample check or check all)
-      for (let link of uniqueInternalLinks.slice(0, 10)) { // limit to 10 per page for performance
-        try {
-          // Quick HEAD or GET check
-          const linkRes = await fetchPage(link);
-          if (linkRes.status >= 400) {
-            totalBrokenLinks++;
-            pageResult.brokenLinksOnPage.push({ link, status: linkRes.status });
-            pageResult.issues.push(`Broken Link: ${link} (${linkRes.status})`);
-          }
-        } catch (err) {
+      // Limit to first 10 links per page and check using CACHE
+      for (let link of uniqueInternalLinks.slice(0, 10)) {
+        const linkRes = await checkLinkCached(link);
+        if (linkRes.status >= 400 || linkRes.status === 'Error') {
           totalBrokenLinks++;
-          pageResult.brokenLinksOnPage.push({ link, status: 'Error' });
-          pageResult.issues.push(`Broken Link: ${link}`);
+          pageResult.brokenLinksOnPage.push({ link, status: linkRes.status });
+          pageResult.issues.push(`Broken Link: ${link} (${linkRes.status})`);
         }
       }
 
@@ -249,7 +284,6 @@ async function main() {
   queueResults.forEach(item => {
     if (item.success) {
       reportData.push(item.data);
-      // Group issues using Map
       item.data.issues.forEach(issue => {
         let key = issue.includes('Broken Link') ? 'Broken Links' : issue;
         issueMap.set(key, (issueMap.get(key) || 0) + 1);
@@ -257,27 +291,20 @@ async function main() {
     }
   });
 
-  // Sort pages by number of issues (worst first)
   reportData.sort((a, b) => b.issues.length - a.issues.length);
 
-  // Save report.json
+  // Save JSON & CSV
   fs.writeFileSync('report.json', JSON.stringify(reportData, null, 2));
-  console.log(`💾 Saved report to report.json`);
+  fs.writeFileSync('report.csv', ['URL,Status,ResponseTime(ms),IssuesCount,Issues', ...reportData.map(row => `"${row.url}",${row.status},${row.responseTime},${row.issues.length},"${row.issues.join(' | ')}"` )].join('\n'));
+  console.log(`💾 Saved report to report.json & report.csv`);
 
-  // Save report.csv
-  let csvRows = ['URL,Status,ResponseTime(ms),IssuesCount,Issues'];
-  reportData.forEach(row => {
-    let issuesStr = `"${row.issues.join(' | ')}"`;
-    csvRows.push(`"${row.url}",${row.status},${row.responseTime},${row.issues.length},${issuesStr}`);
-  });
-  fs.writeFileSync('report.csv', csvRows.join('\n'));
-  console.log(`💾 Saved report to report.csv`);
-
-  // Terminal Summary
+  // Terminal Summary (Sir ki requirement ke sath)
   console.log("\n==============================");
   console.log("📊 SEO AUDIT SUMMARY REPORT");
   console.log("==============================");
   console.log(`Total Pages Checked: ${reportData.length}`);
+  console.log(`Note: Checked a maximum of 10 internal links per page.`);
+  console.log(`Unique Links Cached in Memory: ${linkCache.size}`);
   let pagesWithIssues = reportData.filter(p => p.issues.length > 0).length;
   console.log(`Pages with Issues: ${pagesWithIssues}`);
   console.log(`Total Broken Links Found: ${totalBrokenLinks}`);

@@ -2,7 +2,7 @@
   {
     "url": "https://crawler-test.com",
     "statusCode": 200,
-    "responseTime": 1276,
+    "responseTime": 1278,
     "score": 90,
     "issuesCount": 1,
     "issues": [
@@ -17,7 +17,7 @@
   {
     "url": "http://www.søkbar.no",
     "statusCode": 500,
-    "responseTime": 1306,
+    "responseTime": 1431,
     "score": 0,
     "issuesCount": 1,
     "issues": [
@@ -32,7 +32,7 @@
   {
     "url": "https://crawler-test.com//urls/double_slash/disallowed_start",
     "statusCode": 200,
-    "responseTime": 1326,
+    "responseTime": 1257,
     "score": 90,
     "issuesCount": 1,
     "issues": [
@@ -47,7 +47,7 @@
   {
     "url": "https://subdomain.crawler-test.com",
     "statusCode": 200,
-    "responseTime": 2348,
+    "responseTime": 1899,
     "score": 90,
     "issuesCount": 1,
     "issues": [
@@ -62,7 +62,7 @@
   {
     "url": "https://invalid.crawler-test.com",
     "statusCode": 500,
-    "responseTime": 1279,
+    "responseTime": 1248,
     "score": 0,
     "issuesCount": 1,
     "issues": [
@@ -77,7 +77,7 @@
   {
     "url": "http://crawler-test.com/",
     "statusCode": 200,
-    "responseTime": 1949,
+    "responseTime": 1490,
     "score": 90,
     "issuesCount": 1,
     "issues": [
@@ -92,7 +92,7 @@
   {
     "url": "http://crawler-test.com",
     "statusCode": 200,
-    "responseTime": 1306,
+    "responseTime": 1267,
     "score": 90,
     "issuesCount": 1,
     "issues": [

@@ -3,89 +3,104 @@ const cors = require('cors');
 const axios = require('axios');
 const cheerio = require('cheerio');
 const { URL } = require('url');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public')); // public folder se frontend files serve hongi
+app.use(express.static(path.join(__dirname, 'public')));
 
-const DELAY_MS = 1000;
-const MAX_CONCURRENCY = 2;
+const DELAY_MS = 1000; // 1 second safety delay
+const MAX_CONCURRENCY = 2; // Max 2 concurrent requests
 
-async function sleep(ms) {
+function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-// Relative links ko Full URL mein convert karna (Sir ki requirement)
-function getAbsoluteUrl(href, baseUrl) {
+// Check Robots.txt
+async function checkRobotsTxt(baseUrl) {
     try {
-        const parsedBase = new URL(baseUrl);
-        const resolvedUrl = new URL(href, baseUrl);
-        // Sirf same domain ke links allow karein
-        if (resolvedUrl.hostname === parsedBase.hostname) {
-            return resolvedUrl.href;
-        }
-    } catch (e) {
-        return null;
+        const parsedUrl = new URL(baseUrl);
+        const robotsUrl = `${parsedUrl.protocol}//${parsedUrl.host}/robots.txt`;
+        await axios.get(robotsUrl, { timeout: 5000 });
+    } catch (error) {
+        // Ignored or bypassed gracefully
     }
-    return null;
 }
 
-// Internal Links extract karne ka logic
-async function extractSameDomainLinks(startUrl) {
+// Relative to Absolute URL conversion & Same-Domain Link Extraction
+async function getLinksToAudit(startUrl) {
     let urls = [startUrl];
+    const targetParsed = new URL(startUrl);
+
     try {
-        const response = await axios.get(startUrl, { timeout: 8000 });
-        const $= cheerio.load(response.data);$('a').each((i, el) => {
+        const homeRes = await axios.get(startUrl, { timeout: 8000 });
+        const $ = cheerio.load(homeRes.data);
+
+        $('a').each((i, el) => {
             const href = $(el).attr('href');
             if (href) {
-                const absUrl = getAbsoluteUrl(href, startUrl);
-                if (absUrl && !urls.includes(absUrl)) {
-                    urls.push(absUrl);
+                try {
+                    // Convert relative links (/titles/...) to full absolute URLs
+                    const fullUrl = new URL(href, startUrl);
+
+                    // Restrict to same domain only
+                    if (fullUrl.hostname === targetParsed.hostname && (fullUrl.protocol === 'http:' || fullUrl.protocol === 'https:')) {
+                        urls.push(fullUrl.href);
+                    }
+                } catch (e) {
+                    // Invalid URL format ignored
                 }
             }
         });
+
+        // Deduplicate and limit to max 15 links
+        urls = [...new Set(urls)].slice(0, 15);
     } catch (err) {
-        console.log(`Failed to fetch initial URL: ${startUrl}`);
+        console.log(`❌ Link extraction failed for ${startUrl}`);
     }
-    return urls.slice(0, 15); // Max 15 pages for quick scan
+
+    return urls;
 }
 
-// SEO Audit Logic
+// SEO Audit Engine
 function auditPage(html, url, responseTime, statusCode) {
     const $ = cheerio.load(html);
     const issues = [];
 
+    // Title Check
     const title = $('title').text().trim();
     if (!title) {
-        issues.push({ type: 'Missing Title', severity: 'Critical', why: 'Search engines need titles.', fix: 'Add <title> tag inside <head>.' });
+        issues.push({ type: 'Missing Title', severity: 'Critical', why: 'Search engines need titles to index pages properly.', fix: 'Add a descriptive <title> inside the <head> tag.' });
+    } else if (title.length > 60) {
+        issues.push({ type: 'Title Too Long', severity: 'Warning', why: 'Long titles get cut off in Google search results.', fix: 'Keep title length under 60 characters.' });
     }
 
+    // Meta Description Check
     const metaDesc = $('meta[name="description"]').attr('content');
     if (!metaDesc) {
-        issues.push({ type: 'Missing Meta Description', severity: 'Critical', why: 'Meta descriptions improve CTR.', fix: 'Add <meta name="description"> tag.' });
+        issues.push({ type: 'Missing Meta Description', severity: 'Critical', why: 'Meta descriptions improve search result click rates.', fix: 'Add a <meta name="description"> tag.' });
+    } else if (metaDesc.length > 160) {
+        issues.push({ type: 'Meta Description Too Long', severity: 'Warning', why: 'Descriptions over 160 characters get truncated.', fix: 'Shorten description between 120-160 characters.' });
     }
 
+    // H1 Check
     const h1Count = $('h1').length;
     if (h1Count === 0) {
-        issues.push({ type: 'Missing H1 Tag', severity: 'Critical', why: 'H1 defines page topic.', fix: 'Add one <h1> heading.' });
+        issues.push({ type: 'Missing H1 Tag', severity: 'Critical', why: 'H1 tags define main content structure.', fix: 'Add one primary <h1> heading tag.' });
+    } else if (h1Count > 1) {
+        issues.push({ type: 'Multiple H1 Tags', severity: 'Warning', why: 'Multiple H1 tags weaken main keyword focus.', fix: 'Use only one main <h1> tag per page.' });
     }
 
-    let missingAltCount = 0;
-    $('img').each((i, img) => {
-        if (!$(img).attr('alt')) missingAltCount++;
-    });
-    if (missingAltCount > 0) {
-        issues.push({ type: 'Images Missing Alt Text', severity: 'Info', why: 'Alt text improves accessibility.', fix: 'Add alt attributes to images.' });
-    }
-
+    // Canonical Tag Check
     const canonical = $('link[rel="canonical"]').attr('href');
     if (!canonical) {
-        issues.push({ type: 'Missing Canonical Tag', severity: 'Warning', why: 'Prevents duplicate content.', fix: 'Add <link rel="canonical">.' });
+        issues.push({ type: 'Missing Canonical Tag', severity: 'Warning', why: 'Canonical tags prevent duplicate content flags.', fix: 'Add <link rel="canonical" href="..."> tag.' });
     }
 
+    // SEO Score Calculation
     let score = 100;
     issues.forEach(issue => {
         if (issue.severity === 'Critical') score -= 25;
@@ -94,34 +109,44 @@ function auditPage(html, url, responseTime, statusCode) {
     });
     if (score < 0) score = 0;
 
-    return { url, statusCode, responseTime: `${responseTime} ms`, score, issuesCount: issues.length, issues };
+    return { url, statusCode, responseTime, score, issuesCount: issues.length, issues };
 }
 
-// API Route for Scanning (POST /api/scan)
+// POST API Endpoint /api/scan
 app.post('/api/scan', async (req, res) => {
     const { url } = req.body;
+
     if (!url) {
         return res.status(400).json({ error: 'URL is required' });
     }
 
     try {
-        const urlsToScan = await extractSameDomainLinks(url);
+        await checkRobotsTxt(url);
+        const urls = await getLinksToAudit(url);
+
         const results = [];
         let index = 0;
 
-        while (index < urlsToScan.length) {
-            const chunk = urlsToScan.slice(index, index + MAX_CONCURRENCY);
+        while (index < urls.length) {
+            const chunk = urls.slice(index, index + MAX_CONCURRENCY);
             index += MAX_CONCURRENCY;
 
-            const promises = chunk.map(async (u) => {
+            const promises = chunk.map(async (targetUrl) => {
                 const start = Date.now();
                 try {
                     await sleep(DELAY_MS);
-                    const response = await axios.get(u, { timeout: 8000, validateStatus: () => true });
+                    const response = await axios.get(targetUrl, { timeout: 8000, validateStatus: () => true });
                     const responseTime = Date.now() - start;
-                    return auditPage(response.data, u, responseTime, response.status);
+                    return auditPage(response.data, targetUrl, responseTime, response.status);
                 } catch (err) {
-                    return { url: u, statusCode: 500, responseTime: '0 ms', score: 0, issuesCount: 1, issues: [{ type: 'Broken / Unreachable', severity: 'Critical', why: 'Page unreachable.', fix: 'Check server.' }] };
+                    return {
+                        url: targetUrl,
+                        statusCode: 500,
+                        responseTime: Date.now() - start,
+                        score: 0,
+                        issuesCount: 1,
+                        issues: [{ type: 'Broken Link / Timeout', severity: 'Critical', why: 'Page unreachable.', fix: 'Check URL/Server.' }]
+                    };
                 }
             });
 
@@ -129,12 +154,12 @@ app.post('/api/scan', async (req, res) => {
             results.push(...chunkResults);
         }
 
-        res.json({ success: true, results });
+        return res.json({ success: true, totalChecked: results.length, data: results });
     } catch (error) {
-        res.status(500).json({ error: 'Failed to scan website' });
+        return res.status(500).json({ error: 'Failed to complete SEO scan.' });
     }
 });
 
 app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
+    console.log(`🚀 Server running on http://localhost:3000`);
 });

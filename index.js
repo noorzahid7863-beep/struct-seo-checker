@@ -3,8 +3,8 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const { URL } = require('url');
 
-// Safety Configuration & Mandated Target
-const TARGET_URL = process.argv[2] || 'https://crawler-test.com';
+// Dynamic Target URL from arguments (No hardcoded default)
+const TARGET_URL = process.argv[2];
 const DELAY_MS = 1000; // 1 second delay
 const MAX_CONCURRENCY = 2; // Max 2 concurrent requests
 
@@ -26,9 +26,11 @@ async function checkRobotsTxt(baseUrl) {
     }
 }
 
-// Sitemap & Link Extraction
+// Sitemap & Link Extraction (With Relative-to-Absolute & Same-Domain Filtering)
 async function getLinksToAudit(startUrl) {
     let urls = [startUrl];
+    const targetParsed = new URL(startUrl);
+
     try {
         const parsed = new URL(startUrl);
         const sitemapUrl = `${parsed.protocol}//${parsed.host}/sitemap.xml`;
@@ -37,19 +39,43 @@ async function getLinksToAudit(startUrl) {
         if (res.status === 200 && typeof res.data === 'string' && res.data.includes('<loc>')) {
             const matches = res.data.match(/<loc>(.*?)<\/loc>/g);
             if (matches) {
-                urls = matches.map(m => m.replace(/<\/?loc>/g, '').trim()).slice(0, 20);
+                const sitemapUrls = matches.map(m => m.replace(/<\/?loc>/g, '').trim());
+                // Filter sitemap urls to same domain only
+                for (const smUrl of sitemapUrls) {
+                    try {
+                        const parsedSm = new URL(smUrl);
+                        if (parsedSm.hostname === targetParsed.hostname) {
+                            urls.push(smUrl);
+                        }
+                    } catch (e) {}
+                }
+                urls = [...new Set(urls)].slice(0, 20);
                 console.log(`✅ Found ${urls.length} URLs from sitemap.`);
             }
         }
     } catch (e) {
         console.log(`⚠️ Sitemap not available, scraping homepage links directly.`);
         try {
-            const homeRes = await axios.get(startUrl);
+            const homeRes = await axios.get(startUrl, { timeout: 8000 });
             const $= cheerio.load(homeRes.data);$('a').each((i, el) => {
                 const href = $(el).attr('href');
-                if (href && href.startsWith('http')) urls.push(href);
+                if (href) {
+                    try {
+                        // Convert relative links (/titles/...) to full absolute URLs using base URL
+                        const fullUrl = new URL(href, startUrl);
+                        
+                        // Restrict to same domain and http/https protocols only
+                        if (fullUrl.hostname === targetParsed.hostname && (fullUrl.protocol === 'http:' || fullUrl.protocol === 'https:')) {
+                            urls.push(fullUrl.href);
+                        }
+                    } catch (err) {
+                        // Invalid URL format ignored
+                    }
+                }
             });
+            
             urls = [...new Set(urls)].slice(0, 15);
+            console.log(`✅ Extracted ${urls.length} same-domain links from homepage.`);
         } catch (err) {
             console.log(`❌ Link extraction failed.`);
         }
@@ -112,6 +138,11 @@ function auditPage(html, url, responseTime, statusCode) {
 
 // Runner Function with Concurrency and Delay Safety
 async function runAuditor() {
+    if (!TARGET_URL) {
+        console.error('❌ Error: Please provide a target URL as an argument (e.g., node index.js https://example.com)');
+        process.exit(1);
+    }
+
     console.log(`🚀 Starting SEO Audit: ${TARGET_URL}`);
     await checkRobotsTxt(TARGET_URL);
     const urls = await getLinksToAudit(TARGET_URL);

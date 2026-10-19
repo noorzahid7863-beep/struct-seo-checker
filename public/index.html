@@ -2,31 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SEO & Link Health Checker Dashboard</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background: #f4f6f9; }
-        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        .input-box { display: flex; gap: 10px; margin-bottom: 20px; }
-        input[type="text"] { flex: 1; padding: 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px; }
-        button { padding: 12px 24px; font-size: 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        body { font-family: Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { margin-top: 0; color: #333; }
+        .search-box { display: flex; gap: 10px; margin-bottom: 20px; }
+        input[type="url"] { flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; }
+        button { padding: 12px 24px; background: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
         button:disabled { background: #888; }
         #status { font-weight: bold; margin-bottom: 15px; color: #555; }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background: #007bff; color: white; }
-        .badge { padding: 4px 8px; border-radius: 4px; color: white; font-size: 12px; }
-        .critical { background: #dc3545; }
-        .warning { background: #ffc107; color: black; }
-        .info { background: #17a2b8; }
+        th { background-color: #007bff; color: white; }
+        .badge { padding: 4px 8px; border-radius: 4px; color: white; font-size: 12px; font-weight: bold; display: inline-block; margin: 2px; }
+        .badge-critical { background-color: #dc3545; }
+        .badge-warning { background-color: #ffc107; color: black; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>📊 SEO & Link Health Checker</h2>
-    
-    <div class="input-box">
-        <input type="text" id="urlInput" placeholder="Enter website URL (e.g., https://crawler-test.com)" />
+    <h1>📊 SEO & Link Health Checker</h1>
+    <div class="search-box">
+        <input type="url" id="urlInput" placeholder="Enter Website URL (e.g., https://crawler-test.com)" required>
         <button id="scanBtn" onclick="startScan()">Check Health</button>
     </div>
 
@@ -49,20 +49,21 @@
 <script>
 async function startScan() {
     const urlInput = document.getElementById('urlInput').value.trim();
-    const statusDiv = document.getElementById('status');
     const scanBtn = document.getElementById('scanBtn');
-    const resultsTable = document.getElementById('resultsTable');
-    const resultsBody = document.getElementById('resultsBody');
+    const statusDiv = document.getElementById('status');
+    const table = document.getElementById('resultsTable');
+    const tbody = document.getElementById('resultsBody');
 
     if (!urlInput) {
-        alert('Please enter a valid URL!');
+        alert("Please enter a valid URL!");
         return;
     }
 
+    // UI Updates during scanning
     scanBtn.disabled = true;
-    statusDiv.innerHTML = '⏳ Scanning... Please wait...';
-    resultsBody.innerHTML = '';
-    resultsTable.style.display = 'none';
+    statusDiv.innerHTML = "⏳ <strong>Scanning...</strong> Please wait.";
+    table.style.display = "none";
+    tbody.innerHTML = "";
 
     try {
         const response = await fetch('/api/scan', {
@@ -71,31 +72,34 @@ async function startScan() {
             body: JSON.stringify({ url: urlInput })
         });
 
-        const data = await response.json();
+        const result = await response.json();
 
-        if (data.success && data.results) {
-            statusDiv.innerHTML = `✅ Scan completed! Total pages checked: ${data.results.length}`;
-            resultsTable.style.display = 'table';
+        if (result.success) {
+            statusDiv.innerHTML = `✅ <strong>Scan completed!</strong> Total pages checked: ${result.totalChecked}`;
+            
+            result.data.forEach(item => {
+                let issuesHtml = item.issues.map(iss => 
+                    `<span class="badge ${iss.severity === 'Critical' ? 'badge-critical' : 'badge-warning'}">${iss.type}</span>`
+                ).join(' ') || '<span style="color:green;">No Issues</span>';
 
-            data.results.forEach(res => {
-                let issuesHtml = res.issues.map(i => 
-                    `<span class="badge ${i.severity.toLowerCase()}">${i.type}</span>`
-                ).join(' ');
-
-                let row = `<tr>
-                    <td><a href="${res.url}" target="_blank">${res.url}</a></td>
-                    <td>${res.statusCode}</td>
-                    <td><b>${res.score}/100</b></td>
-                    <td>${res.responseTime}</td>
-                    <td>${issuesHtml || 'None'}</td>
-                </tr>`;
-                resultsBody.innerHTML += row;
+                const row = `
+                    <tr>
+                        <td><a href="${item.url}" target="_blank">${item.url}</a></td>
+                        <td>${item.statusCode}</td>
+                        <td><strong>${item.score}/100</strong></td>
+                        <td>${item.responseTime} ms</td>
+                        <td>${issuesHtml}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
             });
+
+            table.style.display = "table";
         } else {
-            statusDiv.innerHTML = '❌ Scan failed.';
+            statusDiv.innerHTML = "❌ " + (result.error || "Scan failed.");
         }
-    } catch (err) {
-        statusDiv.innerHTML = '❌ Error connecting to server.';
+    } catch (error) {
+        statusDiv.innerHTML = "❌ Server error. Please check backend connection.";
     } finally {
         scanBtn.disabled = false;
     }

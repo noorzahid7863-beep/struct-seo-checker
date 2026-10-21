@@ -24,3 +24,24 @@ An automated Node.js tool and web dashboard designed to audit website pages, che
    ```bash
    git clone [https://github.com/noorzahid7863-beep/struct-seo-checker.git](https://github.com/noorzahid7863-beep/struct-seo-checker.git)
    cd seo-checker
+
+   ---
+
+## 🚀 Future Improvements
+
+To scale this tool from a local development script into an enterprise-grade SEO auditing suite, the following enhancements are planned for future releases:
+
+1. **Deep Crawling & Recursive Discovery:**
+   - Move beyond static sitemaps by implementing recursive link extraction to audit deep nested internal pages dynamically.
+
+2. **Headless Browser Integration (Puppeteer / Playwright):**
+   - Support Client-Side Rendered (CSR) applications, Single Page Applications (SPAs), and dynamic JavaScript-injected meta tags.
+
+3. **Scheduled Audits & Alerting System:**
+   - Implement automated cron jobs to trigger recurring scans and send alerts via Email, Slack, or Webhooks when critical broken links are detected.
+
+4. **Performance & Core Web Vitals:**
+   - Integrate Google Lighthouse API metrics (LCP, FID, CLS) alongside structural SEO tag evaluations.
+
+5. **Database Persistence & Historical Reports:**
+   - Store historical report snapshots in a PostgreSQL/MongoDB database to track SEO improvements and score trends over time.
